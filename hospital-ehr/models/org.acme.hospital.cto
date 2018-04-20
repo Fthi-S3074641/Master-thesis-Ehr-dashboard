@@ -1,0 +1,82 @@
+/**
+ * Write your model definitions here
+ */
+
+namespace org.acme.hospital
+
+abstract participant Person identified by personId {
+  o String personId
+  o String name
+}
+
+participant Anyone extends Person {
+}
+
+participant Doctor extends Person {
+  o String[] myClients optional
+}
+
+participant Nurse extends Person {
+}
+
+participant Patient extends Person {
+  o String[] mySymptoms optional
+  o Medication[] myMedications optional
+  o String[] myReaders optional
+}
+
+asset Medication identified by medicineId {
+  o String medicineId
+  o String description
+}
+
+asset uriEthereum identified by blockchainId {
+  o String blockchainId
+  o String urlETH
+}
+abstract transaction PatientTransaction {
+  --> Patient mypatient
+  o DateTime when
+}
+
+transaction addSymptoms extends PatientTransaction {
+  --> Nurse mynurse
+  o String mysymptom
+}
+
+transaction giveMedication extends PatientTransaction {
+  --> Doctor mydoctor
+  --> Medication mymedication
+}
+
+event MedicationEvent {
+  --> Medication yourmedication
+  --> Doctor fromdoctor
+  --> Patient topatient
+}
+
+event addMeLiveEvent {
+  o String theDoctor
+  o String thePatient
+  o String theMessage
+}
+// transaction addDoctors {
+// }
+
+ transaction moreLive {
+   o String mydoctor
+   o String mypatient
+ }
+
+ transaction addMeLive extends PatientTransaction{
+  --> Doctor mydoctor
+ }
+
+transaction addNurses extends PatientTransaction {
+  --> Doctor mydoctor
+}
+
+transaction updateUrl {
+  --> uriEthereum oldUrl
+  o String newUrl
+}
